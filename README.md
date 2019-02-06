@@ -10,3 +10,18 @@ To be done
 ## Installation
 
 To be done
+
+## Build
+
+Just go build inside of it
+
+## Usage
+Build you database with cscope
+then cisgope <db>
+search for a symbol in the search bar, and observes the callers on the left and the callees on the right
+
+## Todo
+- [ ] Add a nice screenshot
+- [ ] Check db on opening
+- [ ] Browsing through the lists
+- [ ] A text view on the middle
