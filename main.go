@@ -7,7 +7,9 @@ import (
 	pin "gopkg.in/alecthomas/kingpin.v2"
 )
 
-const dbName = "cscope/cscope.out"
+var (
+	dbName = pin.Arg("db", "Path of cscope.out").Required().String()
+)
 
 func main() {
 	pin.Version("cisgope version 0.1.0")
@@ -15,7 +17,7 @@ func main() {
 	pin.CommandLine.VersionFlag.Short('v')
 	pin.Parse()
 	log.SetLevel(log.DebugLevel)
-	db, err := cscope.NewCscope(dbName)
+	db, err := cscope.NewCscope(*dbName)
 	if err != nil {
 		log.Error(err)
 	}
