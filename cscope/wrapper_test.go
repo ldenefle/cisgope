@@ -35,10 +35,8 @@ func TestMultiLineSymbols(t *testing.T) {
 }
 
 func TestNotFoundDatabase(t *testing.T) {
-	cscope, err := NewCscope("randomname")
+	_, err := NewCscope("randomname")
 	assert.Error(t, err)
-	assert.Nil(t, cscope)
-
 }
 
 func TestUnsupportedCommand(t *testing.T) {

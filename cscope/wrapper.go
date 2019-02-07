@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	log "github.com/sirupsen/logrus"
+	"io/ioutil"
 	"os/exec"
 )
 
@@ -32,12 +33,46 @@ func (cscope Cscope) Cmd(command int, symbol string) ([]Symbol, error) {
 	return parseSymbols(bytes.NewReader(out))
 }
 
-func NewCscope(path string) (Cscope, error) {
+// Systemwide cscope installation check
+func cscopeCheck() error {
 	binary, lookErr := exec.LookPath("cscope")
 	if lookErr != nil {
-		return Cscope{}, errors.New("Cscope couldn't be detected on the system")
+		return errors.New("Cscope couldn't be detected on the system")
 	} else {
 		log.Infof("Cscope detected in %s", binary)
+	}
+	return nil
+}
+
+// Check db is sane
+func dbCheck(path string) error {
+	cmd := exec.Command("cscope", "-d", "-f", path, "-L")
+	stderr, err := cmd.StderrPipe()
+	if err != nil {
+		return err
+	}
+
+	if err := cmd.Start(); err != nil {
+		return err
+	}
+
+	slurp, _ := ioutil.ReadAll(stderr)
+
+	if err := cmd.Wait(); err != nil {
+		return err
+	}
+	if string(slurp) != "" {
+		return errors.New(string(slurp))
+	}
+	return nil
+}
+
+func NewCscope(path string) (Cscope, error) {
+	if err := cscopeCheck(); err != nil {
+		return Cscope{}, err
+	}
+	if err := dbCheck(path); err != nil {
+		return Cscope{}, err
 	}
 	return Cscope{
 		dbPath: path,
