@@ -12,8 +12,8 @@ To be done
 To be done
 
 ## Build
-
-Just go build inside of it
+Just make all inside of it
+cisgope will be created under build/
 
 ## Usage
 Build you database with cscope
