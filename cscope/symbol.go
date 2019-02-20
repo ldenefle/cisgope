@@ -19,6 +19,15 @@ func (s Symbol) String() string {
 	return s.File + ":" + strconv.Itoa(s.LineNumber) + ":  " + s.Name
 }
 
+func (s Symbol) Serialize() [4]string {
+	var ret [4]string
+	ret[0] = strconv.Itoa(s.LineNumber)
+	ret[1] = s.LineContent
+	ret[2] = s.File
+	ret[3] = s.Name
+	return ret
+}
+
 func parseSymbols(reader io.Reader) ([]Symbol, error) {
 	symbols := make([]Symbol, 0)
 	scanner := bufio.NewScanner(reader)
